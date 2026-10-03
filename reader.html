@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Reader - Tawqir Pata</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #c0392b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .story-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .content {
+            line-height: 1.8;
+            font-size: 18px;
+            white-space: pre-wrap; /* Text er formatting thik rakhar jonno */
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back-btn">&larr; Back to Home</a>
+        <h1 id="story-title">Loading...</h1>
+        <img id="story-img" class="story-img" src="" alt="" style="display:none;">
+        <div id="story-content" class="content">Loading story...</div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const storyName = urlParams.get('story');
+
+        async function loadFullStory() {
+            if (!storyName) {
+                document.getElementById('story-content').innerText = "Kono golpo pawa jayni!";
+                return;
+            }
+
+            // Title set kora
+            document.getElementById('story-title').innerText = storyName.replace(/-/g, ' ');
+            
+            // Image load kora
+            const img = document.getElementById('story-img');
+            img.src = `pic/${storyName}.jpg`;
+            img.style.display = 'block';
+            img.onerror = () => { img.style.display = 'none'; };
+
+            // Text file load kora
+            try {
+                const response = await fetch(`story/${storyName}.txt`);
+                if (response.ok) {
+                    const text = await response.text();
+                    document.getElementById('story-content').innerText = text;
+                } else {
+                    document.getElementById('story-content').innerText = "Golpo-ti khuje paoa jayni.";
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('story-content').innerText = "Golpo load korte shomossha hocche.";
+            }
+        }
+
+        loadFullStory();
+    </script>
+</body>
+</html>
