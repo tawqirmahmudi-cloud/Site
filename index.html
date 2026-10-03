@@ -53,6 +53,7 @@
             border-radius: 4px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 15px;
+            background-color: #eee;
         }
         .story-title {
             color: #c0392b;
@@ -89,8 +90,6 @@
     </div>
 
     <script>
-        // GitHub Repository info (Tomar github username o repo name ekhane bosbe)
-        // Jodi user repo hoy (username.github.io), tahole github api er niyom alada hote pare.
         const username = "TAWQPIR_GITHUB_USERNAME"; // Tomar GitHub username diye replace koro
         const repo = "TAWQPIR_REPO_NAME";         // Tomar Repository nam diye replace koro
 
@@ -98,7 +97,6 @@
             const container = document.getElementById('story-container');
             
             try {
-                // GitHub API theke story folder er file list ana hocche
                 const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/story`);
                 const files = await response.json();
 
@@ -106,6 +104,8 @@
                     container.innerHTML = "<p style='text-align:center;'>Kono golpo pawa jayni!</p>";
                     return;
                 }
+
+                container.innerHTML = ""; // Clear loading text
 
                 for (let file of files) {
                     if (file.name.endsWith('.txt')) {
@@ -115,16 +115,15 @@
                         const textResponse = await fetch(file.download_url);
                         const textContent = await textResponse.text();
                         
-                        // Thik oi same namer image khuja hocche (jpg ba png)
-                        // Amra dore nichchi image-gula .jpg format er, tumi .png hole oitao handle korte paro
-                        const imgUrl = `pic/${baseName}.jpg`; 
+                        // Image er duita common format check korbe (.jpg ba .png)
+                        // Prothome .jpg diye try korbe, na thakle onerror diye handle hobe
+                        const imgUrl = `pic/${baseName}.jpg`;
 
-                        // Layout toiri kora (Jemon chobi, title, and intro text pic er moto)
                         const card = document.createElement('div');
                         card.className = 'story-card';
                         
                         card.innerHTML = `
-                            <img src="${imgUrl}" alt="${baseName}" class="story-thumb" onerror="this.src='https://via.placeholder.com/600x400?text=Story+Image'">
+                            <img src="${imgUrl}" alt="${baseName}" class="story-thumb" onerror="this.style.display='none'">
                             <br>
                             <a href="reader.html?story=${baseName}" class="story-title">${baseName.replace(/-/g, ' ')}</a>
                             <p class="story-snippet">${textContent.substring(0, 150)}...</p>
