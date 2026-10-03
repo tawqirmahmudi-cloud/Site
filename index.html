@@ -85,13 +85,14 @@
     <div class="container">
         <h2 class="section-title">Latest Online Storybooks</h2>
         <div id="story-container">
-            <!-- Golpogula ekhane dynamic-vabe load hobe -->
+            <p style="text-align:center;">Loading stories...</p>
         </div>
     </div>
 
     <script>
-        const username = "TAWQPIR_GITHUB_USERNAME"; // Tomar GitHub username diye replace koro
-        const repo = "TAWQPIR_REPO_NAME";         // Tomar Repository nam diye replace koro
+        // Sothik username ebong repository name ("Site") set kora holo
+        const username = "tawqirmahmudi-cloud";
+        const repo = "Site";
 
         async function loadStories() {
             const container = document.getElementById('story-container');
@@ -115,8 +116,7 @@
                         const textResponse = await fetch(file.download_url);
                         const textContent = await textResponse.text();
                         
-                        // Image er duita common format check korbe (.jpg ba .png)
-                        // Prothome .jpg diye try korbe, na thakle onerror diye handle hobe
+                        // Image er path
                         const imgUrl = `pic/${baseName}.jpg`;
 
                         const card = document.createElement('div');
